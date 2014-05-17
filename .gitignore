@@ -3,4 +3,5 @@ dist
 .tmp
 .sass-cache
 *.log
+*.swp
 app/bower_components
