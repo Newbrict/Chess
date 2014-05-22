@@ -70,26 +70,45 @@ anToxy = (an) ->
 xyToan = (x,y) ->
 	return (String.fromCharCode (x+96)) + y
 
+pieceFromChar = (c) ->
+	switch c
+		when "p" then new Pawn   false
+		when "r" then new Rook   false
+		when "n" then new Knight false
+		when "b" then new Bishop false
+		when "q" then new Queen  false
+		when "k" then new King   false
+		when "P" then new Pawn   true
+		when "R" then new Rook   true
+		when "N" then new Knight true
+		when "B" then new Bishop true
+		when "Q" then new Queen  true
+		when "K" then new King   true
+		else new BlankPiece
+
 
 
 # Board is from white's perspective.
 class Board
 	# fill in with peices
 	board =
-	for x in [0..7]
-		for y in [0..7]
+	for y in [0..7]
+		for x in [0..7]
 			# if x+y % 2 == 0 then it's a white square
 			new BlankPiece (x + y) % 2 == 0
 
 	# these work with either algebraic notation or x,y coordinates
 	set: (pos..., to) ->
+		# if we need to convert a char into a piece for placement
+		unless to instanceof Piece
+			to = pieceFromChar(to)
+
 		# convert if we are in algebraic notation
 		if pos.length == 1
 			pos = anToxy pos[0]
 
 		x = pos[0]
 		y = pos[1]
-
 		board[x][y] = to
 
 	get: (pos...) ->
@@ -101,9 +120,10 @@ class Board
 
 		return board[x][y]
 
+	# fills an 8x8 board array
 	visual: ->
-		for x in [0..7]
-			for y in [0..7]
+		for y in [0..7]
+			for x in [0..7]
 				@get(x,y).symbol
 
 	# draw the board to the console
@@ -113,8 +133,37 @@ class Board
 		for piece in vis
 			console.log piece.join(' ')
 
+	importFEN: (str) ->
+		x = y = 0
 
+		# first we fill the board
+		while y < 8
+			next = str[0]
+			str = str[1...]
 
+			# if we finished this rank go to the next one
+			if x > 7
+				x = 0
+				y++
+				continue
+
+			# FEN uses numbers to denote # of empty cells
+			unless isNaN next
+				x += next
+				continue
+
+			# set the coordinate to the piece
+			@set(x,y,next)
+
+			# increment our file
+			x++
+
+		# TODO handle rest of the FEN string...
+
+	setup: (type) ->
+		switch type
+			when "classic"
+				@importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 
 
 # some tests
@@ -122,9 +171,12 @@ class Board
 #console.log xyToan 1, 8
 
 myBoard = new Board
-myBoard.set("a2", new Knight true)
-myBoard.set(1,1, new Knight false)
+#myBoard.set("a2", new Knight true)
+#myBoard.set(1,1, new Knight false)
+#myBoard.set(1,3, "f")
 
+#myBoard.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+myBoard.setup("classic")
 myBoard.log()
 
 #console.log myBoard.get(1,2)
