@@ -2,6 +2,10 @@
 
 # eventually Piece should have a canMove
 class Piece
+	constructor: (@isWhite) ->
+		@color = if @isWhite then 'white' else 'black'
+		@symbol = if @isWhite then @whiteSymbol else @blackSymbol
+
 	type: ->
 		@name
 
@@ -11,30 +15,44 @@ class Piece
 class BlankPiece extends Piece
 	name: ""
 	value: 0
+	blackSymbol: "\u25A0"
+	whiteSymbol: "\u25A1"
 
 class Pawn extends Piece
 	name: "Pawn"
 	value: 1
-
-class Bishop extends Piece
-	name: "Bishop"
-	value: 3
+	blackSymbol: "\u265F"
+	whiteSymbol: "\u2659"
 
 class Knight extends Piece
 	name: "Knight"
 	value: 3
+	blackSymbol: "\u265E"
+	whiteSymbol: "\u2658"
+
+class Bishop extends Piece
+	name: "Bishop"
+	value: 3
+	blackSymbol: "\u265D"
+	whiteSymbol: "\u2657"
 
 class Rook extends Piece
 	name: "Rook"
 	value: 5
+	blackSymbol: "\u265C"
+	whiteSymbol: "\u2656"
 
 class Queen extends Piece
 	name: "Queen"
 	value: 9
+	blackSymbol: "\u265B"
+	whiteSymbol: "\u2655"
 
 class King extends Piece
 	name: "King"
 	value: 137
+	blackSymbol: "\u265A"
+	whiteSymbol: "\u2654"
 
 
 
@@ -58,9 +76,10 @@ xyToan = (x,y) ->
 class Board
 	# fill in with peices
 	board =
-	for x in [1..8]
-		for y in [1..8]
-			new BlankPiece
+	for x in [0..7]
+		for y in [0..7]
+			# if x+y % 2 == 0 then it's a white square
+			new BlankPiece (x + y) % 2 == 0
 
 	# these work with either algebraic notation or x,y coordinates
 	set: (pos..., to) ->
@@ -82,6 +101,18 @@ class Board
 
 		return board[x][y]
 
+	visual: ->
+		for x in [0..7]
+			for y in [0..7]
+				@get(x,y).symbol
+
+	# draw the board to the console
+	log: ->
+		console.log "Current Board:"
+		vis = @visual()
+		for piece in vis
+			console.log piece.join(' ')
+
 
 
 
@@ -91,10 +122,20 @@ class Board
 #console.log xyToan 1, 8
 
 myBoard = new Board
-myBoard.set("a2", new Knight)
-myBoard.set(1,1, new King)
-console.log myBoard.get(1,2)
-console.log myBoard.get("a1")
+myBoard.set("a2", new Knight true)
+myBoard.set(1,1, new Knight false)
+
+myBoard.log()
+
+#console.log myBoard.get(1,2)
+#console.log myBoard.get("a1")
+#
+#console.log myBoard.get(1,2).color
+#console.log myBoard.get(1,1).color
+#
+#console.log myBoard.get(1,2).symbol
+#console.log myBoard.get(1,1).symbol
+
 
 #myPiece = new Pawn
 #console.log myPiece.pointValue()
