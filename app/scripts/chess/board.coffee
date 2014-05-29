@@ -134,29 +134,29 @@ class Board
 			console.log piece.join(' ')
 
 	importFEN: (str) ->
-		x = y = 0
+		x = y = 7
 
 		# first we fill the board
-		while y < 8
+		while y >= 0
 			next = str[0]
 			str = str[1...]
 
 			# if we finished this rank go to the next one
-			if x > 7
-				x = 0
-				y++
+			if x < 0
+				x = 7
+				y--
 				continue
 
 			# FEN uses numbers to denote # of empty cells
 			unless isNaN next
-				x += next
+				x -= next
 				continue
 
 			# set the coordinate to the piece
 			@set(x,y,next)
 
 			# increment our file
-			x++
+			x--
 
 		# TODO handle rest of the FEN string...
 
@@ -164,6 +164,20 @@ class Board
 		switch type
 			when "classic"
 				@importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+
+	test: ->
+		board =
+		for y in [0..7]
+			for x in [0..7]
+				new BlankPiece true
+
+		for y in [0..7]
+			for x in [0..7]
+				thisX = Math.abs (3 - x)
+				thisY = Math.abs (5 - y)
+				if (thisX == 1 && thisY == 2) || (thisY == 1 && thisX == 2)
+					@set(x,y,"p")
+		@set(3,5,"N")
 
 
 # some tests
@@ -176,7 +190,8 @@ myBoard = new Board
 #myBoard.set(1,3, "f")
 
 #myBoard.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
-myBoard.setup("classic")
+#myBoard.setup("classic")
+myBoard.test()
 myBoard.log()
 
 #console.log myBoard.get(1,2)
