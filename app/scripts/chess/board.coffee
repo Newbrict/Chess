@@ -114,14 +114,15 @@ pieceFromChar = (c) ->
 
 
 
-# Board is from white's perspective.
+# 0,0 on board is from white's perspective.
 class Game
 	# fill in with peices
-	board =
-	for y in [0..7]
-		for x in [0..7]
-			# if x+y % 2 == 0 then it's a white square
-			new BlankPiece (x + y) % 2 == 0
+	constructor: ->
+		@board =
+		for y in [0..7]
+			for x in [0..7]
+				# if x+y % 2 == 0 then it's a white square
+				new BlankPiece (x + y) % 2 == 0
 
 	# these work with either algebraic notation or x,y coordinates
 	set: (pos..., to) ->
@@ -135,7 +136,7 @@ class Game
 
 		x = pos[0]
 		y = pos[1]
-		board[x][y] = to
+		@board[x][y] = to
 
 	get: (pos...) ->
 		# convert if we are in algebraic notation
@@ -144,7 +145,7 @@ class Game
 		x = pos[0]
 		y = pos[1]
 
-		return board[x][y]
+		return @board[x][y]
 
 	# fills an 8x8 board array
 	visual: ->
@@ -195,7 +196,7 @@ class Game
 		(@get(x,y)).getMoves(x, y, @board)
 
 	test: ->
-		board =
+		@board =
 		for y in [0..7]
 			for x in [0..7]
 				new BlankPiece true
@@ -209,7 +210,7 @@ class Game
 		@set(3,5,"N")
 
 	deibtest: ->
-		board =
+		@board =
 		for y in [0..7]
 			for x in [0..6]
 				new BlankPiece true
@@ -220,24 +221,24 @@ class Game
 #console.log anToxy "a8"
 #console.log xyToan 1, 8
 
-myBoard = new Game
-#myBoard.set("a2", new Knight true)
-#myBoard.set(1,1, new Knight false)
-#myBoard.set(1,3, "f")
+myGame = new Game
+#myGame.set("a2", new Knight true)
+#myGame.set(1,1, new Knight false)
+#myGame.set(1,3, "f")
 
-#myBoard.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
-myBoard.setup("classic")
-#myBoard.test()
-myBoard.log()
-myBoard.getMoves(0,1)
-#console.log myBoard.get(1,2)
-#console.log myBoard.get("a1")
+#myGame.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+myGame.setup("classic")
+#myGame.test()
+myGame.log()
+myGame.getMoves(0,1)
+#console.log myGame.get(1,2)
+#console.log myGame.get("a1")
 #
-#console.log myBoard.get(1,2).color
-#console.log myBoard.get(1,1).color
+#console.log myGame.get(1,2).color
+#console.log myGame.get(1,1).color
 #
-#console.log myBoard.get(1,2).symbol
-#console.log myBoard.get(1,1).symbol
+#console.log myGame.get(1,2).symbol
+#console.log myGame.get(1,1).symbol
 
 
 #myPiece = new Pawn
