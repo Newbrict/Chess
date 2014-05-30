@@ -6,6 +6,7 @@ class Piece
 		@color = if @isWhite then 'white' else 'black'
 		@symbol = if @isWhite then @whiteSymbol else @blackSymbol
 		@hasMoved = false
+		@isBlank = @ instanceof BlankPiece
 
 	type: ->
 		@name
@@ -67,7 +68,7 @@ class Knight extends Piece
 		# x and y for board
 		for yb in [0..7]
 			for xb in [0..7]
-				unless game.get(xb,yb).isWhite == @isWhite
+				if game.get(xb,yb).isWhite != @isWhite || game.get(xb,yb).isBlank
 					# x and y offsets
 					xo = Math.abs (x - xb)
 					yo = Math.abs (y - yb)
@@ -276,7 +277,7 @@ class Game
 		@board =
 		for y in [0..7]
 			for x in [0..7]
-				new BlankPiece true
+				new BlankPiece false
 
 		@set(4,4,"n")
 		@set(3,2,"K")
