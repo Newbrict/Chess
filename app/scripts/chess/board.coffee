@@ -84,8 +84,12 @@ class Bishop extends Piece
 
 	getMoves: (x,y,game) ->
 		moves = []
-		i = x+1
-		j = y+1
+		for j in [0..7]
+			for i in [0..7]
+				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+					if game.inClearDiagonal(x,y,i,j)
+						moves.push( [i,j] )
+		return moves
 
 
 class Rook extends Piece
@@ -94,11 +98,30 @@ class Rook extends Piece
 	blackSymbol: "\u265C"
 	whiteSymbol: "\u2656"
 
+	getMoves: (x,y,game) ->
+		# TODO: Implement castling.
+		moves = []
+		for j in [0..7]
+			for i in [0..7]
+				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+					if game.inClearStraight(x,y,i,j)
+						moves.push( [i,j] )
+		return moves
+
 class Queen extends Piece
 	name: "Queen"
 	value: 9
 	blackSymbol: "\u265B"
 	whiteSymbol: "\u2655"
+
+	getMoves: (x,y,game) ->
+		moves = []
+		for j in [0..7]
+			for i in [0..7]
+				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+					if game.inClearStraight(x,y,i,j) or game.inClearDiagonal(x,y,i,j)
+						moves.push( [i,j] )
+		return moves
 
 class King extends Piece
 	name: "King"
@@ -106,6 +129,16 @@ class King extends Piece
 	blackSymbol: "\u265A"
 	whiteSymbol: "\u2654"
 
+	getMoves: (x,y,game) ->
+		# TODO: Implement castling and preventing moves into a check.
+		moves = []
+		for j in [0..7]
+			for i in [0..7]
+				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+					if Math.abs(i-x) < 2 and Math.abs(j-y) < 2
+						moves.push( [i,j] )
+		return moves
+					
 
 
 # a8 to [1,8]
@@ -287,15 +320,7 @@ class Game
 
 
 	deibTest: ->
-		@board =
-		for y in [0..7]
-			for x in [0..7]
-				new BlankPiece true
-		@set(4,4,"q")
-		@set(6,6,"p")
-		@set(2,2,"p")
-		@set(6,2,"p")
-		@set(2,6,"p")
+		@set(4,4,"b")
 
 
 # some tests
@@ -329,4 +354,6 @@ myGame.log()
 console.log("---------------")
 deibGame = new Game
 deibGame.deibTest()
+for o in deibGame.getMoves(4,4)
+	console.log(o)
 deibGame.log()
