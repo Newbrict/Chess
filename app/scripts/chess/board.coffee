@@ -150,6 +150,13 @@ class Game
 
 		return @board[x][y]
 
+	inBounds: (pos...) ->
+		if pos.length == 1
+			pos = anToxy pos[0]
+		x = pos[0]
+		y = pos[1]
+		return ( x >= 0 and y >= 0 ) and ( x < 8 and y < 8 )
+
 	# fills an 8x8 board array
 	visual: ->
 		for y in [0..7]
