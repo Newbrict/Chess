@@ -27,27 +27,30 @@ class Pawn extends Piece
 	blackSymbol: "\u265F"
 	whiteSymbol: "\u2659"
 
-	getMoves: (x,y,board) ->
+	getMoves: (x,y,game) ->
 		moves = []
 		# White.
 		if @color == 'white'
 			# Default move.
-			if y+1 < 8 and board[x][y+1] instanceof BlankPiece
+			if y+1 < 8 and game.get( x, y+1 ) instanceof BlankPiece
 				moves.push( [x,y+1] )
 				# Double step.
-				if x == 1 and y+2 < 8 and board[x][y+2] instanceof BlankPiece
+				if y == 1 and y+2 < 8 and game.get( x, y+2 ) instanceof BlankPiece
 					moves.push( [x,y+2] )
 			# TODO: Attack available.
 		# Black.
 		else
 			# Default move.
-			if y-1 >= 0 && board[x][y-1] instanceof BlankPiece
+			if y-1 >= 0 && game.get( x, y-1 ) instanceof BlankPiece
 				moves.push( [x,y-1] )
 				# Double step.
-				if x == 6 && y-2 >= 0 && board[x][y-2] instanceof BlankPiece
+				if y == 6 && y-2 >= 0 && game.get( x, y-2 ) instanceof BlankPiece
 					moves.push( [x,y-2] )
 			# TODO: Attack available.
-		console.log(moves)
+		i = 0
+		while i < moves.length
+			console.log( moves[i] )
+			i++
 		return moves
 
 class Knight extends Piece
@@ -193,7 +196,7 @@ class Game
 				@importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 
 	getMoves: (x, y) ->
-		(@get(x,y)).getMoves(x, y, @board)
+		(@get(x,y)).getMoves( x, y, this )
 
 	test: ->
 		@board =
@@ -230,7 +233,7 @@ myGame = new Game
 myGame.setup("classic")
 #myGame.test()
 myGame.log()
-myGame.getMoves(0,1)
+myGame.getMoves(3,1)
 #console.log myGame.get(1,2)
 #console.log myGame.get("a1")
 #
