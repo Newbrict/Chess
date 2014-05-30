@@ -152,34 +152,28 @@ class Game
 				new BlankPiece (x + y) % 2 == 0
 
 	# these work with either algebraic notation or x,y coordinates
-	set: (pos..., to) ->
+	set: (x, y, to) ->
 		# if we need to convert a char into a piece for placement
 		unless to instanceof Piece
 			to = pieceFromChar(to)
 
-		# convert if we are in algebraic notation
-		if pos.length == 1
-			pos = anToxy pos[0]
-
-		x = pos[0]
-		y = pos[1]
 		@board[x][y] = to
 
-	get: (pos...) ->
-		# convert if we are in algebraic notation
-		if pos.length == 1
-			pos = anToxy pos[0]
-		x = pos[0]
-		y = pos[1]
-
+	get: (x, y) ->
 		return @board[x][y]
 
-	inBounds: (pos...) ->
-		if pos.length == 1
-			pos = anToxy pos[0]
-		x = pos[0]
-		y = pos[1]
-		return ( x >= 0 and y >= 0 ) and ( x < 8 and y < 8 )
+	# move 1 to 2
+	move: (x1, y1, x2, y2) ->
+		# TODO capture logic / points
+
+		# move the piece
+		@set(x2, y2, @get(x1,y1))
+
+		# clear the piece's old position
+		@set(x1, y1, new BlankPiece)
+
+	inBounds: (x, y) ->
+		return (x >= 0 and y >= 0) and (x < 8 and y < 8)
 
 	# fills an 8x8 board array
 	visual: ->
