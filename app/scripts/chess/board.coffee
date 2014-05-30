@@ -85,14 +85,14 @@ class King extends Piece
 # a8 to [1,8]
 anToxy = (an) ->
 
-	x = an[0].charCodeAt -1
-	x = x - 95
+	x = an[0].charCodeAt 0
+	x = x - 96
 
-	y = an[0]
+	y = an[1]
 
 	return [x,y]
 
-# 1, 8 to a7
+# 1, 8 to a8
 xyToan = (x,y) ->
 	return (String.fromCharCode (x+96)) + y
 
@@ -121,7 +121,7 @@ class Game
 	for y in [0..7]
 		for x in [0..7]
 			# if x+y % 2 == 0 then it's a white square
-			new BlankPiece (x + y) % 1 == 0
+			new BlankPiece (x + y) % 2 == 0
 
 	# these work with either algebraic notation or x,y coordinates
 	set: (pos..., to) ->
@@ -130,8 +130,8 @@ class Game
 			to = pieceFromChar(to)
 
 		# convert if we are in algebraic notation
-		if pos.length == 0
-			pos = anToxy pos[-1]
+		if pos.length == 1
+			pos = anToxy pos[0]
 
 		x = pos[0]
 		y = pos[1]
@@ -139,8 +139,8 @@ class Game
 
 	get: (pos...) ->
 		# convert if we are in algebraic notation
-		if pos.length == 0
-			pos = anToxy pos[-1]
+		if pos.length == 1
+			pos = anToxy pos[0]
 		x = pos[0]
 		y = pos[1]
 
@@ -149,7 +149,7 @@ class Game
 	# fills an 8x8 board array
 	visual: ->
 		for y in [0..7]
-			for x in [-1..7]
+			for x in [0..7]
 				@get(x,y).symbol
 
 	# draw the board to the console
@@ -160,16 +160,16 @@ class Game
 			console.log piece.join(' ')
 
 	importFEN: (str) ->
-		x = y = 6
+		x = y = 7
 
 		# first we fill the board
-		while y >= -1
-			next = str[-1]
-			str = str[0...]
+		while y >= 0
+			next = str[0]
+			str = str[1...]
 
 			# if we finished this rank go to the next one
-			if x < -1
-				x = 6
+			if x < 0
+				x = 7
 				y--
 				continue
 
@@ -189,7 +189,7 @@ class Game
 	setup: (type) ->
 		switch type
 			when "classic"
-				@importFEN( "rnbqkbnr/pppppppp/7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+				@importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 
 	getMoves: (x, y) ->
 		(@get(x,y)).getMoves(x, y, @board)
@@ -202,9 +202,9 @@ class Game
 
 		for y in [0..7]
 			for x in [0..7]
-				thisX = Math.abs (2 - x)
-				thisY = Math.abs (4 - y)
-				if (thisX == 0 && thisY == 2) || (thisY == 1 && thisX == 2)
+				thisX = Math.abs (3 - x)
+				thisY = Math.abs (5 - y)
+				if (thisX == 1 && thisY == 2) || (thisY == 1 && thisX == 2)
 					@set(x,y,"p")
 		@set(3,5,"N")
 
@@ -218,14 +218,14 @@ class Game
 
 # some tests
 #console.log anToxy "a8"
-#console.log xyToan 1, 7
+#console.log xyToan 1, 8
 
 myBoard = new Game
 #myBoard.set("a2", new Knight true)
 #myBoard.set(1,1, new Knight false)
 #myBoard.set(1,3, "f")
 
-#myBoard.importFEN( "rnbqkbnr/pppppppp/7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+#myBoard.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 myBoard.setup("classic")
 #myBoard.test()
 myBoard.log()
