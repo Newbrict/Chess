@@ -66,6 +66,21 @@ class Knight extends Piece
 	blackSymbol: "\u265E"
 	whiteSymbol: "\u2658"
 
+	getMoves: (x,y,game) ->
+		moves = []
+		# loops over entire board, less efficient but easier to read
+		# x and y for board
+		for yb in [0..7]
+			for xb in [0..7]
+				unless game.get(xb,yb).isWhite == @isWhite
+					# x and y offsets
+					xo = Math.abs (x - xb)
+					yo = Math.abs (y - yb)
+					if (xo == 1 && yo == 2) || (yo == 1 && xo == 2)
+						moves.push( [xb,yb] )
+
+		return moves
+
 class Bishop extends Piece
 	name: "Bishop"
 	value: 3
@@ -218,13 +233,13 @@ class Game
 			for x in [0..7]
 				new BlankPiece true
 
-		for y in [0..7]
-			for x in [0..7]
-				thisX = Math.abs (3 - x)
-				thisY = Math.abs (5 - y)
-				if (thisX == 1 && thisY == 2) || (thisY == 1 && thisX == 2)
-					@set(x,y,"p")
-		@set(3,5,"N")
+		@set(4,4,"n")
+		@set(3,2,"K")
+		@set(2,3,"k")
+		moves = @getMoves(4,4)
+		for xy in moves
+			@set(xy[0], xy[1], "p")
+
 
 	deibtest: ->
 		@board =
@@ -247,8 +262,9 @@ myGame = new Game
 myGame.setup("classic")
 myGame.set(4,2,"p")
 #myGame.test()
+myGame.test()
 myGame.log()
-myGame.getMoves(3,1)
+#myGame.getMoves(4,4)
 #console.log myGame.get(1,2)
 #console.log myGame.get("a1")
 #
