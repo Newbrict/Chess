@@ -28,25 +28,32 @@ class Pawn extends Piece
 	whiteSymbol: "\u2659"
 
 	getMoves: (x,y,game) ->
+		# TODO: Implement en passant and pawn conversion.
 		moves = []
-		# White.
-		if @color == 'white'
-			# Default move.
-			if y+1 < 8 and game.get( x, y+1 ) instanceof BlankPiece
-				moves.push( [x,y+1] )
-				# Double step.
-				if y == 1 and y+2 < 8 and game.get( x, y+2 ) instanceof BlankPiece
-					moves.push( [x,y+2] )
-			# TODO: Attack available.
-		# Black.
-		else
-			# Default move.
-			if y-1 >= 0 && game.get( x, y-1 ) instanceof BlankPiece
-				moves.push( [x,y-1] )
-				# Double step.
-				if y == 6 && y-2 >= 0 && game.get( x, y-2 ) instanceof BlankPiece
-					moves.push( [x,y-2] )
-			# TODO: Attack available.
+		# Constant that represents which direction pawns move in.
+		movement = 1
+		if @color == 'black'
+			movement = -1
+
+		# Default move.
+		if y+movement < 8 and game.get( x, y+movement ) instanceof BlankPiece
+			moves.push( [x,y+movement] )
+			# Double step.
+			if y == 1 and y+(2*movement) < 8 and game.get( x, y+(2*movement) ) instanceof BlankPiece
+				moves.push( [x,y+(2*movement)] )
+		# Check if the pawn can capture a piece.
+		if game.inBounds( x-1, y+movement )
+			enemy = game.get( x-1, y+movement )
+			if not (enemy instanceof BlankPiece)
+				if @color != enemy.color
+					moves.push( [x-1, y+movement] )
+		if game.inBounds( x+1, y+movement )
+			enemy = game.get( x+1, y+movement )
+			if not (enemy instanceof BlankPiece)
+				if @color != enemy.color
+					moves.push( [x+1, y+movement] )
+
+		# DEBUG
 		i = 0
 		while i < moves.length
 			console.log( moves[i] )
@@ -238,6 +245,7 @@ myGame = new Game
 
 #myGame.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 myGame.setup("classic")
+myGame.set(4,2,"p")
 #myGame.test()
 myGame.log()
 myGame.getMoves(3,1)
