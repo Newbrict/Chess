@@ -46,20 +46,13 @@ class Pawn extends Piece
 		# Check if the pawn can capture a piece.
 		if game.inBounds( x-1, y+movement )
 			enemy = game.get( x-1, y+movement )
-			if not (enemy instanceof BlankPiece)
-				if @color != enemy.color
-					moves.push( [x-1, y+movement] )
+			if not (enemy instanceof BlankPiece) and @color != enemy.color
+				moves.push( [x-1, y+movement] )
 		if game.inBounds( x+1, y+movement )
 			enemy = game.get( x+1, y+movement )
-			if not (enemy instanceof BlankPiece)
-				if @color != enemy.color
-					moves.push( [x+1, y+movement] )
+			if not (enemy instanceof BlankPiece) and @color != enemy.color
+				moves.push( [x+1, y+movement] )
 
-		# DEBUG
-		i = 0
-		while i < moves.length
-			console.log( moves[i] )
-			i++
 		return moves
 
 class Knight extends Piece
@@ -88,6 +81,12 @@ class Bishop extends Piece
 	value: 3
 	blackSymbol: "\u265D"
 	whiteSymbol: "\u2657"
+
+	getMoves: (x,y,game) ->
+		moves = []
+		i = x+1
+		j = y+1
+
 
 class Rook extends Piece
 	name: "Rook"
@@ -161,6 +160,54 @@ class Game
 
 	get: (x, y) ->
 		return @board[x][y]
+
+	inClearDiagonal: (x1, y1, x2, y2) ->
+		if (x1 == x2) and (y1 == y2)
+			return false
+		# Check if a 45-degree diagonal exists.
+		if Math.abs( x1 - x2 ) != Math.abs( y1 - y2 )
+			return false
+
+		xMove = 0
+		yMove = 0
+		if ( x1 < x2 ) then xMove = 1 else xMove = -1
+		if ( y1 < y2 ) then yMove = 1 else yMove = -1
+
+		i = x1 + xMove
+		j = y1 + yMove
+		while not (i==x1 and j==y1) and not (i==x2 and j==y2)
+			if not (@get( i, j ) instanceof BlankPiece)
+				return false
+			i += xMove
+			j += yMove
+
+		return true
+
+
+	inClearStraight: (x1, y1, x2, y2) ->
+		# Two tiles are not in straight lines if they are the same tile or
+		# if not one of the coordinates is the same
+		if (x1 == x2 and y1 == y2) or (x1 != x2 and y1 != y2)
+			return false
+
+		
+		xMove = 0
+		yMove = 0
+		if x1 == x2
+			if y1 < y2 then yMove = 1 else yMove = -1
+		else
+			if x1 < x2 then xMove = 1 else xMove = -1
+
+		i = x1 + xMove
+		j = y1 + yMove
+		while not (i==x1 and j==y1) and not (i==x2 and j==y2)
+			if not (@get( i, j ) instanceof BlankPiece)
+				return false
+			i += xMove
+			j += yMove
+
+		return true
+
 
 	# move 1 to 2
 	move: (x1, y1, x2, y2) ->
@@ -239,12 +286,16 @@ class Game
 			@set(xy[0], xy[1], "p")
 
 
-	deibtest: ->
+	deibTest: ->
 		@board =
 		for y in [0..7]
-			for x in [0..6]
+			for x in [0..7]
 				new BlankPiece true
-		@set(0,0,"p")
+		@set(4,4,"q")
+		@set(6,6,"p")
+		@set(2,2,"p")
+		@set(6,2,"p")
+		@set(2,6,"p")
 
 
 # some tests
@@ -257,8 +308,6 @@ myGame = new Game
 #myGame.set(1,3, "f")
 
 #myGame.importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
-myGame.setup("classic")
-myGame.set(4,2,"p")
 #myGame.test()
 myGame.test()
 myGame.log()
@@ -275,3 +324,9 @@ myGame.log()
 
 #myPiece = new Pawn
 #console.log myPiece.pointValue()
+
+# deibTest
+console.log("---------------")
+deibGame = new Game
+deibGame.deibTest()
+deibGame.log()
