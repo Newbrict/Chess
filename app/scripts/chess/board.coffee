@@ -166,8 +166,10 @@ class Game
 	move: (x1, y1, x2, y2) ->
 		# TODO capture logic / points
 
-		# move the piece
-		@set(x2, y2, @get(x1,y1))
+		# move the piece and set flags
+		p = @get(x1, y1)
+		p.hasMoved = true
+		@set(x2, y2, p)
 
 		# clear the piece's old position
 		@set(x1, y1, new BlankPiece)
