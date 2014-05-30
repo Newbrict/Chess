@@ -65,15 +65,14 @@ class Knight extends Piece
 	getMoves: (x,y,game) ->
 		moves = []
 		# loops over entire board, less efficient but easier to read
-		# x and y for board
-		for yb in [0..7]
-			for xb in [0..7]
-				if game.get(xb,yb).isWhite != @isWhite || game.get(xb,yb).isBlank
+		for j in [0..7]
+			for i in [0..7]
+				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
 					# x and y offsets
-					xo = Math.abs (x - xb)
-					yo = Math.abs (y - yb)
+					xo = Math.abs (x - i)
+					yo = Math.abs (y - j)
 					if (xo == 1 && yo == 2) || (yo == 1 && xo == 2)
-						moves.push( [xb,yb] )
+						moves.push([i,j])
 
 		return moves
 
@@ -87,8 +86,8 @@ class Bishop extends Piece
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
-					if game.inClearDiagonal(x,y,i,j)
+				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
+					if game.inClearDiagonal(x, y, i, j)
 						moves.push( [i,j] )
 		return moves
 
@@ -100,11 +99,10 @@ class Rook extends Piece
 	whiteSymbol: "\u2656"
 
 	getMoves: (x,y,game) ->
-		# TODO: Implement castling.
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
 					if game.inClearStraight(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
@@ -119,7 +117,7 @@ class Queen extends Piece
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
 					if game.inClearStraight(x,y,i,j) or game.inClearDiagonal(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
@@ -135,11 +133,10 @@ class King extends Piece
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				unless (game.get(i,j).isWhite == @isWhite and game.get(i,j) not instanceof BlankPiece)
+				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
 					if Math.abs(i-x) < 2 and Math.abs(j-y) < 2
 						moves.push( [i,j] )
 		return moves
-					
 
 
 # a8 to [1,8]
@@ -224,7 +221,6 @@ class Game
 		if (x1 == x2 and y1 == y2) or (x1 != x2 and y1 != y2)
 			return false
 
-		
 		xMove = 0
 		yMove = 0
 		if x1 == x2
