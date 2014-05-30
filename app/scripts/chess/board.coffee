@@ -5,6 +5,7 @@ class Piece
 	constructor: (@isWhite) ->
 		@color = if @isWhite then 'white' else 'black'
 		@symbol = if @isWhite then @whiteSymbol else @blackSymbol
+		@hasMoved = false
 
 	type: ->
 		@name
@@ -39,8 +40,9 @@ class Pawn extends Piece
 		if y+movement < 8 and game.get( x, y+movement ) instanceof BlankPiece
 			moves.push( [x,y+movement] )
 			# Double step.
-			if y == 1 and y+(2*movement) < 8 and game.get( x, y+(2*movement) ) instanceof BlankPiece
-				moves.push( [x,y+(2*movement)] )
+			if not @hasMoved
+				if y+(2*movement) < 8 and game.get( x, y+(2*movement) ) instanceof BlankPiece
+					moves.push( [x,y+(2*movement)] )
 		# Check if the pawn can capture a piece.
 		if game.inBounds( x-1, y+movement )
 			enemy = game.get( x-1, y+movement )
