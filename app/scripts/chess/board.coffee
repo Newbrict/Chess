@@ -30,7 +30,6 @@ class Pawn extends Piece
 	whiteSymbol: "\u2659"
 
 	getMoves: (x,y,game) ->
-		# TODO: Implement en passant and pawn conversion.
 		moves = []
 		# Constant that represents which direction pawns move in.
 		movement = 1
@@ -129,7 +128,6 @@ class King extends Piece
 	whiteSymbol: "\u2654"
 
 	getMoves: (x,y,game) ->
-		# TODO: Implement castling and preventing moves into a check.
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
@@ -241,7 +239,6 @@ class Game
 
 	# move 1 to 2
 	move: (x1, y1, x2, y2) ->
-		# TODO capture logic / points
 
 		# move the piece and set flags
 		p = @get(x1, y1)
@@ -292,7 +289,6 @@ class Game
 			# increment our file
 			x--
 
-		# TODO handle rest of the FEN string...
 
 	setup: (type) ->
 		switch type
