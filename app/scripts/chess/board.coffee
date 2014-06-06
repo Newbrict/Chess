@@ -190,6 +190,26 @@ class Game
 	get: (x, y) ->
 		return @board[x][y]
 
+	# takes x, y, and bool for isWhite
+	inCheck: (x, y, white) ->
+		moves = []
+		for j in [0..7]
+			for i in [0..7]
+				# skip the square in question
+				if i == x and j == y
+					continue
+				# get moves of all non blank pieces of opposite color
+				if @get(i,j).isWhite != white and !@get(i,j).isBlank
+					moves = moves.concat(@getMoves(i,j))
+
+		# go through each move and check to see if we have an assailant
+		for m in moves
+			if m[0] == x and m[1] == y
+				return true
+
+		# phew, that was a close one, king.
+		return false
+
 	inClearDiagonal: (x1, y1, x2, y2) ->
 		if (x1 == x2) and (y1 == y2)
 			return false
@@ -299,17 +319,18 @@ class Game
 		(@get(x,y)).getMoves( x, y, this )
 
 	test: ->
-		@board =
-		for y in [0..7]
-			for x in [0..7]
-				new BlankPiece false
+		#@board =
+		#for y in [0..7]
+		#	for x in [0..7]
+		#		new BlankPiece false
 
-		@set(4,4,"n")
+		@set(5,6,"r")
+		@set(1,2,"n")
+		@set(4,4,"q")
 		@set(3,2,"K")
-		@set(2,3,"k")
-		moves = @getMoves(4,4)
-		for xy in moves
-			@set(xy[0], xy[1], "p")
+
+		check = @inCheck(3,2,true)
+		console.log check
 
 
 	deibTest: ->
