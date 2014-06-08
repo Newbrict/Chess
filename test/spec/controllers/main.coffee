@@ -15,5 +15,5 @@ describe 'Controller: MainCtrl', ->
       $scope: scope
     }
 
-  it 'should attach a list of awesomeThings to the scope', ->
-    expect(scope.awesomeThings.length).toBe 3
+  it 'should create an instance of the game', ->
+    expect(scope.game instanceof Game).toBe true
