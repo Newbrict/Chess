@@ -32,11 +32,11 @@ module.exports = (grunt) ->
         tasks: ["bowerInstall"]
 
       coffee:
-        files: ["<%= yeoman.app %>/scripts/{,*/}*.{coffee,litcoffee,coffee.md}"]
+        files: ["<%= yeoman.app %>/scripts/{,*/,*/*/}*.{coffee,litcoffee,coffee.md}"]
         tasks: ["newer:coffee:dist"]
 
       coffeeTest:
-        files: ["test/spec/{,*/}*.{coffee,litcoffee,coffee.md}"]
+        files: ["test/spec/{,*/,*/*/}*.{coffee,litcoffee,coffee.md}"]
         tasks: [
           "newer:coffee:test"
           "karma"
@@ -154,7 +154,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: "<%= yeoman.app %>/scripts"
-          src: "{,*/}*.coffee"
+          src: "{,*/,*/*/}*.coffee"
           dest: ".tmp/scripts"
           ext: ".js"
         ]
@@ -163,7 +163,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: "test/spec"
-          src: "{,*/}*.coffee"
+          src: "{,*/,*/*/}*.coffee"
           dest: ".tmp/spec"
           ext: ".js"
         ]
@@ -200,7 +200,7 @@ module.exports = (grunt) ->
       dist:
         files:
           src: [
-            "<%= yeoman.dist %>/scripts/{,*/}*.js"
+            "<%= yeoman.dist %>/scripts/{,*/,*/*/}*.js"
             "<%= yeoman.dist %>/styles/{,*/}*.css"
             "<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"
             "<%= yeoman.dist %>/styles/fonts/*"
