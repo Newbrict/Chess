@@ -1,6 +1,9 @@
 'use strict'
 
-# eventually Piece should have a canMove
+###############################################################################
+# Piece Class #################################################################
+###############################################################################
+
 class Piece
 	constructor: (@isWhite) ->
 		@color = if @isWhite then 'white' else 'black'
@@ -61,12 +64,12 @@ class Knight extends Piece
 	blackSymbol: "\u265E"
 	whiteSymbol: "\u2658"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x,y,board) ->
 		moves = []
 		# loops over entire board, less efficient but easier to read
 		for j in [0..7]
 			for i in [0..7]
-				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
+				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
 					# x and y offsets
 					xo = Math.abs (x - i)
 					yo = Math.abs (y - j)
@@ -81,12 +84,12 @@ class Bishop extends Piece
 	blackSymbol: "\u265D"
 	whiteSymbol: "\u2657"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x,y,board) ->
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
-					if game.inClearDiagonal(x, y, i, j)
+				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
+					if board.clearDiagonal(x, y, i, j)
 						moves.push( [i,j] )
 		return moves
 
@@ -97,12 +100,12 @@ class Rook extends Piece
 	blackSymbol: "\u265C"
 	whiteSymbol: "\u2656"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x,y,board) ->
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
-					if game.inClearStraight(x,y,i,j)
+				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
+					if board.clearStraight(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
 
@@ -112,12 +115,12 @@ class Queen extends Piece
 	blackSymbol: "\u265B"
 	whiteSymbol: "\u2655"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x,y,board) ->
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
-					if game.inClearStraight(x,y,i,j) or game.inClearDiagonal(x,y,i,j)
+				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
+					if board.clearStraight(x,y,i,j) or board.clearDiagonal(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
 
@@ -127,15 +130,21 @@ class King extends Piece
 	blackSymbol: "\u265A"
 	whiteSymbol: "\u2654"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x,y,board) ->
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				if game.get(i,j).isWhite != @isWhite or game.get(i,j).isBlank
+				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
 					if Math.abs(i-x) < 2 and Math.abs(j-y) < 2
-						moves.push( [i,j] )
+						# at this stage we have the radius around the king
+						unless board.inCheck(i,j, @isWhite)
+							moves.push( [i,j] )
 		return moves
 
+
+###############################################################################
+# Some Utilities ##############################################################
+###############################################################################
 
 # a8 to [1,8]
 anToxy = (an) ->
@@ -167,11 +176,14 @@ pieceFromChar = (c) ->
 		when "K" then new King   true
 		else new BlankPiece
 
-
+###############################################################################
+# Board Class #################################################################
+###############################################################################
 
 # 0,0 on board is from white's perspective.
-class Game
+class Board
 	# fill in with peices
+	#TODO eventually give this an x and y size as constructor arg
 	constructor: ->
 		@board =
 		for y in [0..7]
@@ -187,30 +199,34 @@ class Game
 
 		@board[x][y] = to
 
+	reset: (x, y) ->
+		@board[x][y] = new BlankPiece (x + y) % 2 == 0
+
+
 	get: (x, y) ->
 		return @board[x][y]
 
-	# takes x, y, and bool for isWhite
-	inCheck: (x, y, white) ->
-		moves = []
-		for j in [0..7]
-			for i in [0..7]
-				# skip the square in question
-				if i == x and j == y
-					continue
-				# get moves of all non blank pieces of opposite color
-				if @get(i,j).isWhite != white and !@get(i,j).isBlank
-					moves = moves.concat(@getMoves(i,j))
+	# move 1 to 2
+	move: (x1, y1, x2, y2) ->
 
-		# go through each move and check to see if we have an assailant
-		for m in moves
-			if m[0] == x and m[1] == y
-				return true
+		# move the piece and set flags
+		p = @get(x1, y1)
+		p.hasMoved = true
+		@set(x2, y2, p)
 
-		# phew, that was a close one, king.
-		return false
+		# clear the piece's old position
+		@set(x1, y1, new BlankPiece)
 
-	inClearDiagonal: (x1, y1, x2, y2) ->
+	inBounds: (x, y) ->
+		return (x >= 0 and y >= 0) and (x < 8 and y < 8)
+
+	# fills an board array with symbols
+	visual: ->
+		for y in [0..7]
+			for x in [0..7]
+				@get(x,y).symbol
+
+	clearDiagonal: (x1, y1, x2, y2) ->
 		if (x1 == x2) and (y1 == y2)
 			return false
 		# Check if a 45-degree diagonal exists.
@@ -233,7 +249,7 @@ class Game
 		return true
 
 
-	inClearStraight: (x1, y1, x2, y2) ->
+	clearStraight: (x1, y1, x2, y2) ->
 		# Two tiles are not in straight lines if they are the same tile or
 		# if not one of the coordinates is the same
 		if (x1 == x2 and y1 == y2) or (x1 != x2 and y1 != y2)
@@ -256,31 +272,72 @@ class Game
 
 		return true
 
+	# takes x, y, and bool for isWhite
+	inCheck: (x, y, white) ->
 
-	# move 1 to 2
-	move: (x1, y1, x2, y2) ->
+		# piece needs to be out of the way for this check
+		tempPiece = @get(x,y)
 
-		# move the piece and set flags
-		p = @get(x1, y1)
-		p.hasMoved = true
-		@set(x2, y2, p)
+		# clear the current square
+		@reset(x,y)
 
-		# clear the piece's old position
-		@set(x1, y1, new BlankPiece)
+		moves = []
+		for j in [0..7]
+			for i in [0..7]
 
-	inBounds: (x, y) ->
-		return (x >= 0 and y >= 0) and (x < 8 and y < 8)
+				# skip the square in question
+				if i == x and j == y
+					continue
 
-	# fills an 8x8 board array
-	visual: ->
-		for y in [0..7]
-			for x in [0..7]
-				@get(x,y).symbol
+				# get moves of all non blank pieces of opposite color
+				if @get(i,j).isWhite != white and !@get(i,j).isBlank
+					moves = moves.concat(@getMoves(i,j))
+
+
+		#put our piece back in place
+		@set(x,y,tempPiece)
+
+		# go through each move and check to see if we have an assailant
+		for m in moves
+			if m[0] == x and m[1] == y
+				return true
+
+		# phew, that was a close one, king.
+		return false
+
+	inCheckMate: (x, y, white) ->
+		if @inCheck(x,y,white) and @getMoves(x, y).length == 0
+			return true
+		else
+			return false
+
+	getMoves: (x, y) ->
+
+		# piece needs to be out of the way for this check
+		tempPiece = @get(x,y)
+
+		# clear the current square
+		@reset(x,y)
+
+		moves = tempPiece.getMoves(x, y, this)
+
+		# put our piece back
+		@set(x, y, tempPiece)
+
+		return moves
+
+###############################################################################
+# Game Class ##################################################################
+###############################################################################
+class Game
+
+	constructor: ->
+		@board = new Board
 
 	# draw the board to the console
 	log: ->
 		console.log "Current Board:"
-		vis = @visual()
+		vis = @board.visual()
 		for piece in vis
 			console.log piece.join(' ')
 
@@ -304,7 +361,7 @@ class Game
 				continue
 
 			# set the coordinate to the piece
-			@set(x,y,next)
+			@board.set(x,y,next)
 
 			# increment our file
 			x--
@@ -315,8 +372,6 @@ class Game
 			when "classic"
 				@importFEN( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 
-	getMoves: (x, y) ->
-		(@get(x,y)).getMoves( x, y, this )
 
 	test: ->
 		#@board =
@@ -324,17 +379,24 @@ class Game
 		#	for x in [0..7]
 		#		new BlankPiece false
 
-		@set(5,6,"r")
-		@set(1,2,"n")
-		@set(4,4,"q")
-		@set(3,2,"K")
+		@board.set(5,6,"r")
+		@board.set(1,2,"n")
+		@board.set(3,3,"q")
+		@board.set(2,3,"q")
+		@board.set(3,2,"K")
 
-		check = @inCheck(3,2,true)
-		console.log check
+		check = @board.inCheck(3,2,true)
+		checkMate = @board.inCheckMate(3,2,true)
+		moves = @board.getMoves(3,2)
+		for m	in moves
+			@board.set(m[0], m[1], "p")
+		console.log check + " " + checkMate
 
 
 	deibTest: ->
-		@set(4,4,"b")
+		@board.set(4,4,"b")
+		for o in @board.getMoves(4,4)
+			console.log(o)
 
 
 # some tests
@@ -368,6 +430,4 @@ myGame.log()
 console.log("---------------")
 deibGame = new Game
 deibGame.deibTest()
-for o in deibGame.getMoves(4,4)
-	console.log(o)
 deibGame.log()
