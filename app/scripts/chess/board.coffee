@@ -5,7 +5,7 @@
 ###############################################################################
 
 # 0,0 on board is from white's perspective.
-class Board
+class @Board
 	# fill in with peices
 	#TODO eventually give this an x and y size as constructor arg
 	constructor: ->
@@ -149,5 +149,3 @@ class Board
 		@set(x, y, tempPiece)
 
 		return moves
-
-@Board = Board

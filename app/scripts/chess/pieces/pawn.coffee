@@ -1,4 +1,4 @@
-class Pawn extends Piece
+class @Pawn extends Piece
 	name: "Pawn"
 	value: 1
 	blackSymbol: "\u265F"
@@ -29,5 +29,3 @@ class Pawn extends Piece
 				moves.push( [x+1, y+movement] )
 
 		return moves
-
-@Pawn = Pawn

@@ -1,4 +1,4 @@
-class BlankPiece extends Piece
+class @BlankPiece extends Piece
 	name: ""
 	value: 0
 	blackSymbol: "\u25A0"
@@ -6,5 +6,3 @@ class BlankPiece extends Piece
 
 	getMoves: (x,y,board) ->
 		return [[x,y]]
-
-@BlankPiece = BlankPiece

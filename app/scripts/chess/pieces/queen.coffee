@@ -1,4 +1,4 @@
-class Queen extends Piece
+class @Queen extends Piece
 	name: "Queen"
 	value: 9
 	blackSymbol: "\u265B"
@@ -12,5 +12,3 @@ class Queen extends Piece
 					if board.clearStraight(x,y,i,j) or board.clearDiagonal(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
-
-@Queen = Queen

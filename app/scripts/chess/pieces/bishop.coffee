@@ -1,4 +1,4 @@
-class Bishop extends Piece
+class @Bishop extends Piece
 	name: "Bishop"
 	value: 3
 	blackSymbol: "\u265D"
@@ -12,5 +12,3 @@ class Bishop extends Piece
 					if board.clearDiagonal(x, y, i, j)
 						moves.push( [i,j] )
 		return moves
-
-@Bishop = Bishop

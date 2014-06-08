@@ -1,4 +1,4 @@
-class Piece
+class @Piece
 	constructor: (@isWhite) ->
 		@color = if @isWhite then 'white' else 'black'
 		@symbol = if @isWhite then @whiteSymbol else @blackSymbol
@@ -10,5 +10,3 @@ class Piece
 
 	pointValue: ->
 		@value
-
-@Piece = Piece

@@ -1,4 +1,4 @@
-class Knight extends Piece
+class @Knight extends Piece
 	name: "Knight"
 	value: 3
 	blackSymbol: "\u265E"
@@ -17,5 +17,3 @@ class Knight extends Piece
 						moves.push([i,j])
 
 		return moves
-
-@Knight = Knight

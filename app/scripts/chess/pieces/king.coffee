@@ -1,4 +1,4 @@
-class King extends Piece
+class @King extends Piece
 	name: "King"
 	value: 137
 	blackSymbol: "\u265A"
@@ -14,5 +14,3 @@ class King extends Piece
 						unless board.inCheck(i,j, @isWhite)
 							moves.push( [i,j] )
 		return moves
-
-@King = King

@@ -1,4 +1,4 @@
-class Rook extends Piece
+class @Rook extends Piece
 	name: "Rook"
 	value: 5
 	blackSymbol: "\u265C"
@@ -12,5 +12,3 @@ class Rook extends Piece
 					if board.clearStraight(x,y,i,j)
 						moves.push( [i,j] )
 		return moves
-
-@Rook = Rook
