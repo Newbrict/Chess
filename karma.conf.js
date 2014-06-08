@@ -18,6 +18,7 @@ module.exports = function(config) {
       'app/bower_components/angular-sanitize/angular-sanitize.js',
       'app/bower_components/angular-route/angular-route.js',
       '.tmp/scripts/*.js',
+      '.tmp/scripts/chess/pieces/piece.js',
       '.tmp/scripts/**/*.js',
       '.tmp/spec/**/*.js'
     ],
