@@ -2,7 +2,9 @@ describe 'Pawn', ->
 
 	beforeEach ->
 		@whitePawn = new Pawn true
+		@whitePawn.hasMoved = true
 		@blackPawn = new Pawn true
+		@blackPawn.hasMoved = true
 		@board = new Board
 
 	it 'has a type', ->
@@ -14,25 +16,25 @@ describe 'Pawn', ->
 		expect(typeof @blackPawn.pointValue()).toBe "number"
 
 	it "can only move forward one or two spaces if it hasn't moved yet", ->
+		@whitePawn.hasMoved = false
 		moves = @whitePawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves).toContain [1, 3]
 		expect(moves.length).toBe 2
 		expect(@whitePawn.hasMoved).toBe false
 
+		@blackPawn.hasMoved = false
 		moves = @blackPawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves).toContain [1, 3]
 		expect(moves.length).toBe 2
 		expect(@blackPawn.hasMoved).toBe false
 
-	it "can only move forward one or two spaces if it has moved", ->
-		@whitePawn.hasMoved = true
+	it "can only move forward one space if it has moved", ->
 		moves = @whitePawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 1
 
-		@blackPawn.hasMoved = true
 		moves = @blackPawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 1
@@ -58,3 +60,24 @@ describe 'Pawn', ->
 		moves = @blackPawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 1
+
+	it "can capture diagonally", ->
+		# In front and to the left
+		@board.set 1, 3, @blackPawn
+		moves = @whitePawn.getMoves 2, 2, @board
+		expect(moves).toContain([1,3])
+
+		# In front and to the right
+		@board.set 3, 3, @blackPawn
+		moves = @whitePawn.getMoves 2, 2, @board
+		expect(moves).toContain([3,3])
+
+		# In front and to the left
+		@board.set 1, 3, @whitePawn
+		moves = @blackPawn.getMoves 2, 2, @board
+		expect(moves).toContain([1,3])
+
+		# In front and to the right
+		@board.set 3, 3, @whitePawn
+		moves = @blackPawn.getMoves 2, 2, @board
+		expect(moves).toContain([3,3])
