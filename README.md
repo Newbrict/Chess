@@ -16,5 +16,8 @@ npm install
 # If you don't have grunt
 npm install -g grunt-cli
 
-grunt jshint:all
+grunt serve
+grunt test
 ```
+
+One day I hope to complete this readme
