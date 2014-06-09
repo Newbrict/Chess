@@ -3,7 +3,7 @@ describe 'Pawn', ->
 	beforeEach ->
 		@whitePawn = new Pawn true
 		@whitePawn.hasMoved = true
-		@blackPawn = new Pawn true
+		@blackPawn = new Pawn false
 		@blackPawn.hasMoved = true
 		@board = new Board
 
@@ -24,9 +24,9 @@ describe 'Pawn', ->
 		expect(@whitePawn.hasMoved).toBe false
 
 		@blackPawn.hasMoved = false
-		moves = @blackPawn.getMoves 1, 1, @board
-		expect(moves).toContain [1, 2]
+		moves = @blackPawn.getMoves 1, 4, @board
 		expect(moves).toContain [1, 3]
+		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 2
 		expect(@blackPawn.hasMoved).toBe false
 
@@ -36,7 +36,7 @@ describe 'Pawn', ->
 		expect(moves.length).toBe 1
 
 		moves = @blackPawn.getMoves 1, 1, @board
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [1, 0]
 		expect(moves.length).toBe 1
 
 	it 'can have its movement blocked', ->
@@ -45,19 +45,19 @@ describe 'Pawn', ->
 		moves = @whitePawn.getMoves 1, 1, @board
 		expect(moves.length).toBe 0
 
-		@board.set 1, 2, @whitePawn
-		moves = @blackPawn.getMoves 1, 1, @board
+		@board.set 1, 1, @whitePawn
+		moves = @blackPawn.getMoves 1, 2, @board
 		expect(moves.length).toBe 0
 
 		# Blocker two spaces in front of it
-		@board.set 1, 2, (new BlankPiece)
+		@board.reset 1, 2
 		@board.set 1, 3, @blackPawn
 		moves = @whitePawn.getMoves 1, 1, @board
 		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 1
 
-		@board.set 1, 3, @whitePawn
-		moves = @blackPawn.getMoves 1, 1, @board
+		@board.set 1, 1, @whitePawn
+		moves = @blackPawn.getMoves 1, 3, @board
 		expect(moves).toContain [1, 2]
 		expect(moves.length).toBe 1
 
@@ -73,11 +73,11 @@ describe 'Pawn', ->
 		expect(moves).toContain([3,3])
 
 		# In front and to the left
-		@board.set 1, 3, @whitePawn
-		moves = @blackPawn.getMoves 2, 2, @board
-		expect(moves).toContain([1,3])
+		@board.set 2, 2, @whitePawn
+		moves = @blackPawn.getMoves 1, 3, @board
+		expect(moves).toContain([2,2])
 
 		# In front and to the right
-		@board.set 3, 3, @whitePawn
-		moves = @blackPawn.getMoves 2, 2, @board
-		expect(moves).toContain([3,3])
+		@board.set 2, 2, @whitePawn
+		moves = @blackPawn.getMoves 3, 3, @board
+		expect(moves).toContain([2,2])

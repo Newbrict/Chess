@@ -4,28 +4,33 @@ class @Pawn extends Piece
 	blackSymbol: "\u265F"
 	whiteSymbol: "\u2659"
 
-	getMoves: (x,y,game) ->
+	getMoves: (x, y, board) ->
 		moves = []
 		# Constant that represents which direction pawns move in.
-		movement = 1
-		if @color == 'black'
-			movement = -1
+		dir = 1
+		if !@isWhite
+			dir = -1
 
 		# Default move.
-		if y+movement < 8 and game.get( x, y+movement ) instanceof BlankPiece
-			moves.push( [x,y+movement] )
+		if board.inBounds(0, y+dir) and board.get( x, y+dir ).isBlank
+			moves.push( [x,y+dir] )
 			# Double step.
-			if not @hasMoved
-				if y+(2*movement) < 8 and game.get( x, y+(2*movement) ) instanceof BlankPiece
-					moves.push( [x,y+(2*movement)] )
+			unless @hasMoved
+				if board.inBounds(0, y+(2*dir)) and board.get( x, y+(2*dir) ).isBlank
+					moves.push( [x,y+(2*dir)] )
+
+
 		# Check if the pawn can capture a piece.
-		if game.inBounds( x-1, y+movement )
-			enemy = game.get( x-1, y+movement )
-			if not (enemy instanceof BlankPiece) and @color != enemy.color
-				moves.push( [x-1, y+movement] )
-		if game.inBounds( x+1, y+movement )
-			enemy = game.get( x+1, y+movement )
-			if not (enemy instanceof BlankPiece) and @color != enemy.color
-				moves.push( [x+1, y+movement] )
+		# to the left
+		if board.inBounds( x-1, y+dir )
+			enemy = board.get( x-1, y+dir )
+			if !enemy.isBlank and enemy.isWhite != @isWhite
+				moves.push( [x-1, y+dir] )
+
+		# to the right
+		if board.inBounds( x+1, y+dir )
+			enemy = board.get( x+1, y+dir )
+			if !enemy.isBlank and enemy.isWhite != @isWhite
+				moves.push( [x+1, y+dir] )
 
 		return moves
