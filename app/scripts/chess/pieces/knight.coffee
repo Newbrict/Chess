@@ -1,3 +1,5 @@
+'use strict'
+
 class @Knight extends Piece
 	name: "Knight"
 	value: 3

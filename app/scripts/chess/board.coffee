@@ -1,9 +1,5 @@
 'use strict'
 
-###############################################################################
-# Board Class #################################################################
-###############################################################################
-
 # 0,0 on board is from white's perspective.
 class @Board
 	# fill in with peices
@@ -130,7 +126,8 @@ class @Board
 		return false
 
 	inCheckMate: (x, y, white) ->
-		if @inCheck(x,y,white) and @getMoves(x, y).length == 0
+		console.log "post: " + @getMoves(x,y)
+		if @inCheck(x, y, white) and @getMoves(x, y).length == 0
 			return true
 		else
 			return false

@@ -1,3 +1,5 @@
+'use strict'
+
 class @Rook extends Piece
 	name: "Rook"
 	value: 5

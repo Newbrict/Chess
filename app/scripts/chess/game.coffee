@@ -1,6 +1,5 @@
-###############################################################################
-# Game Class ##################################################################
-###############################################################################
+'use strict'
+
 class @Game
 
 	constructor: ->
@@ -51,21 +50,18 @@ class @Game
 		#	for x in [0..7]
 		#		new BlankPiece false
 
-		@board.set(5,6,"r")
-		@board.set(1,2,"n")
-		@board.set(3,3,"q")
-		@board.set(2,3,"q")
-		@board.set(3,2,"K")
+		@board.set(2,2,"q")
+		@board.set(1,2,"q")
+		@board.set(2,1,"K")
 
-		check = @board.inCheck(3,2,true)
-		checkMate = @board.inCheckMate(3,2,true)
-		moves = @board.getMoves(3,2)
+		check = @board.inCheck(2,1,true)
+		checkMate = @board.inCheckMate(2,1,true)
+		moves = @board.getMoves(2,1)
 		for m	in moves
 			@board.set(m[0], m[1], "p")
 		console.log check + " " + checkMate
 
-
-	deibTest: ->
-		@board.set(4,4,"b")
-		for o in @board.getMoves(4,4)
-			console.log(o)
+# this should work god dammit
+#myGame = new Game
+#myGame.test()
+#myGame.log()

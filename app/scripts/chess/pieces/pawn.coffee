@@ -1,3 +1,5 @@
+'use strict'
+
 class @Pawn extends Piece
 	name: "Pawn"
 	value: 1

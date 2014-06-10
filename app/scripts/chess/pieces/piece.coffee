@@ -1,3 +1,5 @@
+'use strict'
+
 class @Piece
 	constructor: (@isWhite) ->
 		@color = if @isWhite then 'white' else 'black'

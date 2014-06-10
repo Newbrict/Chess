@@ -1,3 +1,5 @@
+'use strict'
+
 class @BlankPiece extends Piece
 	name: ""
 	value: 0
