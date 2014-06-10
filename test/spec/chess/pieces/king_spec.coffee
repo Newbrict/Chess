@@ -32,22 +32,24 @@ describe 'King', ->
 
 		expect(moves.length).toBe 8
 
-#	it "can be put in check", ->
-#		# black queen
-#		@board.set 1, 2, (new Queen false)
-#		moves = @king.getMoves 2, 1, @board
-#		expect(@board.inCheck(2, 1, @king.isWhite)).toBe true
-#		expect(@board.inCheckMate(2, 1, @king.isWhite)).toBe false
-#		expect(moves).toContain [2, 0]
-#		expect(moves).toContain [3, 1]
-#		expect(moves).toContain [1, 2]
-#		expect(moves.length).toBe 3
-#
-#	it "can be put in check mate", ->
-#		# black queens
-#		@board.set 1, 2, (new Queen false)
-#		@board.set 2, 2, (new Queen false)
-#		moves = @king.getMoves 2, 1, @board
-#		expect(@board.inCheck(2, 1, @king.isWhite)).toBe true
-#		expect(@board.inCheckMate(2, 1, @king.isWhite)).toBe true
-#		expect(moves.length).toBe 0
+	it "can be put in check", ->
+		# black queen
+		@board.set 1, 2, "q"
+		@board.set 2, 1, @king
+		moves = @board.getMoves 2, 1
+		expect(@board.inCheck(2, 1, @king.isWhite)).toBe true
+		expect(@board.inCheckMate(2, 1, @king.isWhite)).toBe false
+		expect(moves).toContain [2, 0]
+		expect(moves).toContain [3, 1]
+		expect(moves).toContain [1, 2]
+		expect(moves.length).toBe 3
+
+	it "can be put in check mate", ->
+		# black queens
+		@board.set 1, 2, "q"
+		@board.set 2, 2, "q"
+		@board.set 2, 1, @king
+		moves = @board.getMoves 2, 1
+		expect(@board.inCheck(2, 1, @king.isWhite)).toBe true
+		expect(@board.inCheckMate(2, 1, @king.isWhite)).toBe true
+		expect(moves.length).toBe 0

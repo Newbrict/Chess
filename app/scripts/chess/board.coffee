@@ -126,7 +126,6 @@ class @Board
 		return false
 
 	inCheckMate: (x, y, white) ->
-		console.log "post: " + @getMoves(x,y)
 		if @inCheck(x, y, white) and @getMoves(x, y).length == 0
 			return true
 		else
