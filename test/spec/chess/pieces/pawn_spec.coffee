@@ -7,13 +7,15 @@ describe 'Pawn', ->
 		@blackPawn.hasMoved = true
 		@board = new Board
 
-	it 'has a type', ->
-		expect(@whitePawn.type()).toBe 'Pawn'
-		expect(@blackPawn.type()).toBe 'Pawn'
+	it 'has a name', ->
+		expect(@whitePawn.name).toBe 'Pawn'
+		expect(@blackPawn.name).toBe 'Pawn'
 
 	it 'has a point value', ->
-		expect(typeof @whitePawn.pointValue()).toBe "number"
-		expect(typeof @blackPawn.pointValue()).toBe "number"
+		expect(typeof @whitePawn.value).toBe "number"
+		expect(typeof @blackPawn.value).toBe "number"
+		expect(@whitePawn.value).toBe 1
+		expect(@blackPawn.value).toBe 1
 
 	it "can only move forward one or two spaces if it hasn't moved yet", ->
 		@whitePawn.hasMoved = false

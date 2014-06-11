@@ -6,9 +6,3 @@ class @Piece
 		@symbol = if @isWhite then @whiteSymbol else @blackSymbol
 		@hasMoved = false
 		@isBlank = @ instanceof BlankPiece
-
-	type: ->
-		@name
-
-	pointValue: ->
-		@value

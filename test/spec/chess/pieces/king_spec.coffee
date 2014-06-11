@@ -6,12 +6,12 @@ describe 'King', ->
 		@king = new King true
 		@board = new Board
 
-	it 'has a type', ->
-		expect(@king.type()).toBe 'King'
+	it 'has a name', ->
+		expect(@king.name).toBe 'King'
 
 	it 'has a point value', ->
-		expect(typeof @king.pointValue()).toBe "number"
-		expect(@king.pointValue()).toBe 137
+		expect(typeof @king.value).toBe "number"
+		expect(@king.value).toBe 137
 
 	it "can can move in 8 directions", ->
 		moves = @king.getMoves 4, 4, @board
