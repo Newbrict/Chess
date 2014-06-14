@@ -29,13 +29,35 @@ class @Board
 	# move 1 to 2
 	move: (x1, y1, x2, y2) ->
 
-		# move the piece and set flags
+		moves = @getMoves(x1, y1)
+		if not containsPair(moves, x2, y2)
+			return false
+
 		p = @get(x1, y1)
-		p.hasMoved = true
+
+		# move the piece
 		@set(x2, y2, p)
 
 		# clear the piece's old position
 		@set(x1, y1, new BlankPiece)
+
+		# check if the king is in check
+		kx = -1
+		ky = -1
+		for j in [0..7]
+			for i in [0..7]
+				if @get(i,j) instanceof King
+					kx = i
+					ky = j
+
+
+		if kx >= 0 and @inCheck(kx, ky, p.isWhite)
+			@set(x1, y1, p)
+			@set(x1, y1, new BlankPiece)
+			return false
+		else
+			p.hasMoved = true
+		
 
 	inBounds: (x, y) ->
 		return (x >= 0 and y >= 0) and (x < 8 and y < 8)

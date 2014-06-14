@@ -26,8 +26,23 @@ describe 'Board', ->
 		piece = new Pawn false
 		@board.set(4,4, piece)
 		expect(piece.hasMoved).toBe false
-		@board.move(4,4,4,5)
+		@board.move(4,4,4,3)
 		expect(piece.hasMoved).toBe true
+
+	it "can prevent moves that lead to checks", ->
+		bishop = new Bishop false
+		@board.set(4,4, "k")
+		@board.set(4,5, bishop)
+		@board.set(4,6, "Q")
+		@board.move(4,5, 5,6)
+		expect(bishop.hasMoved).toBe false
+
+	it "will allow other pieces to prevent checks", ->
+		@board.set(4,4, "k")
+		@board.set(4,6, "Q")
+		@board.set(2,5, "r")
+		@board.move(2,5, 4,5)
+		expect(@board.inCheck(4,4,false)).toBe false
 
 	#	TODO not sure if I should put the diagonal/straight tests here as I may
 	# want to move them into utilities eventually
