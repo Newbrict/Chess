@@ -57,7 +57,7 @@ class @Board
 					@set 5, y2, cRook
 
 		# clear the piece's old position
-		@set(x1, y1, new BlankPiece)
+		@reset x1, y1
 
 		# check if the king is in check
 		kx = -1
