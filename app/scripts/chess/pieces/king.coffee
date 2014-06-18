@@ -8,17 +8,25 @@ class @King extends Piece
 
 	getMoves: (x,y,board) ->
 		moves = []
+
 		# castling
 		unless @hasMoved
 			# left side
 			if board.clearStraight(x,y,0,y)
 				if not board.get(0,y).hasMoved and board.get(0,y) instanceof Rook
-					moves.push [2,y, "castle"]
+					# cannot castle through a check
+					unless board.inCheck(1, y, @isWhite) ||
+					board.inCheck(2, y, @isWhite) ||
+					board.inCheck(3, y, @isWhite)
+						moves.push [2,y, "castle"]
 
 			# right side
 			if board.clearStraight(x,y,7,y)
 				if not board.get(0,y).hasMoved and board.get(0,y) instanceof Rook
-					moves.push [6,y, "castle"]
+					# cannot castle through a check
+					unless board.inCheck(5, y, @isWhite) ||
+					board.inCheck(6, y, @isWhite)
+						moves.push [6,y, "castle"]
 
 		# regular moves
 		for j in [0..7]
