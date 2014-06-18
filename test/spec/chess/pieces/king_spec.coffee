@@ -103,3 +103,15 @@ describe 'King', ->
 		expect(@board.get(3,0).name).toBe "Rook"
 		expect(@board.get(6,7).name).toBe "King"
 		expect(@board.get(5,7).name).toBe "Rook"
+
+	it "cannot castle through a check", ->
+		# queen threatens area between the castle
+		@board.set 0, 4, "K"
+		@board.set 0, 0, "R"
+		@board.set 7, 3, "q"
+
+		moves = @board.getMoves 0, 4
+		expect(moves.length).toBe 3
+		expect(moves).toContain [1, 4, "move"]
+		expect(moves).toContain [0, 5, "move"]
+		expect(moves).toContain [1, 5, "move"]
