@@ -13,7 +13,8 @@ class @Game
 			console.log piece.join(' ')
 
 	importFEN: (str) ->
-		x = y = 7
+		x = 0
+		y = 7
 
 		# first we fill the board
 		while y >= 0
@@ -21,21 +22,21 @@ class @Game
 			str = str[1...]
 
 			# if we finished this rank go to the next one
-			if x < 0
-				x = 7
+			if x > 7
+				x = 0
 				y--
 				continue
 
 			# FEN uses numbers to denote # of empty cells
 			unless isNaN next
-				x -= next
+				x += next
 				continue
 
 			# set the coordinate to the piece
 			@board.set(x,y,next)
 
 			# increment our file
-			x--
+			x++
 
 
 	setup: (type) ->

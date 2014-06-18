@@ -54,11 +54,11 @@ describe 'Queen', ->
 
 		moves = @board.getMoves 4, 4
 		expect(moves.length).toBe 16
-		expect(moves).toContain [2, 2]
-		expect(moves).toContain [6, 6]
-		expect(moves).toContain [6, 2]
-		expect(moves).toContain [2, 6]
-		expect(moves).toContain [2, 4]
-		expect(moves).toContain [6, 4]
-		expect(moves).toContain [4, 2]
-		expect(moves).toContain [4, 6]
+		expect(moves).toContain [2, 2, "capture"]
+		expect(moves).toContain [6, 6, "capture"]
+		expect(moves).toContain [6, 2, "capture"]
+		expect(moves).toContain [2, 6, "capture"]
+		expect(moves).toContain [2, 4, "capture"]
+		expect(moves).toContain [6, 4, "capture"]
+		expect(moves).toContain [4, 2, "capture"]
+		expect(moves).toContain [4, 6, "capture"]

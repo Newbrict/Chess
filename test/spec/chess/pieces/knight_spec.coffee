@@ -12,7 +12,6 @@ describe 'Knight', ->
 		expect(@knight.value).toBe 3
 
 	it "can can move in 8 directions and hop over pieces", ->
-		moves = @knight.getMoves 4, 4, @board
 
 		# TO CAPTURE
 		# bottom left
@@ -47,14 +46,15 @@ describe 'Knight', ->
 		@board.set 4, 5, "P"
 		@board.set 3, 5, "P"
 
+		moves = @knight.getMoves 4, 4, @board
 
-		expect(moves).toContain [3, 2]
-		expect(moves).toContain [5, 2]
-		expect(moves).toContain [2, 3]
-		expect(moves).toContain [2, 5]
-		expect(moves).toContain [3, 6]
-		expect(moves).toContain [5, 6]
-		expect(moves).toContain [6, 3]
-		expect(moves).toContain [6, 5]
+		expect(moves).toContain [3, 2, "capture"]
+		expect(moves).toContain [5, 2, "capture"]
+		expect(moves).toContain [2, 3, "capture"]
+		expect(moves).toContain [2, 5, "capture"]
+		expect(moves).toContain [3, 6, "capture"]
+		expect(moves).toContain [5, 6, "capture"]
+		expect(moves).toContain [6, 3, "capture"]
+		expect(moves).toContain [6, 5, "capture"]
 
 		expect(moves.length).toBe 8

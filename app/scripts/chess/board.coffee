@@ -27,7 +27,13 @@ class @Board
 		return @board[x][y]
 
 	# move 1 to 2
-	move: (x1, y1, x2, y2) ->
+	move: (from, to) ->
+
+		x1 = from[0]
+		y1 = from[1]
+		x2   = to[0]
+		y2   = to[1]
+		type = to[2]
 
 		moves = @getMoves(x1, y1)
 		if not containsPair(moves, x2, y2)
@@ -37,6 +43,18 @@ class @Board
 
 		# move the piece
 		@set(x2, y2, p)
+
+		# determine special moves
+		switch type
+			when "castle"
+				cRook = new Rook p.isWhite
+				cRook.hasMoved = true
+				if x2 == 2
+					@reset 0, y2
+					@set 3, y2, cRook
+				if x2 == 6
+					@reset 7, y2
+					@set 5, y2, cRook
 
 		# clear the piece's old position
 		@set(x1, y1, new BlankPiece)
@@ -57,7 +75,9 @@ class @Board
 			return false
 		else
 			p.hasMoved = true
-		
+
+		return true
+
 
 	inBounds: (x, y) ->
 		return (x >= 0 and y >= 0) and (x < 8 and y < 8)

@@ -15,11 +15,11 @@ class @Pawn extends Piece
 
 		# Default move.
 		if board.inBounds(0, y+dir) and board.get( x, y+dir ).isBlank
-			moves.push( [x,y+dir] )
+			moves.push( [x, y+dir, "move"] )
 			# Double step.
 			unless @hasMoved
 				if board.inBounds(0, y+(2*dir)) and board.get( x, y+(2*dir) ).isBlank
-					moves.push( [x,y+(2*dir)] )
+					moves.push( [x, y+(2*dir), "move"] )
 
 
 		# Check if the pawn can capture a piece.
@@ -27,12 +27,12 @@ class @Pawn extends Piece
 		if board.inBounds( x-1, y+dir )
 			enemy = board.get( x-1, y+dir )
 			if !enemy.isBlank and enemy.isWhite != @isWhite
-				moves.push( [x-1, y+dir] )
+				moves.push( [x-1, y+dir, "capture"] )
 
 		# to the right
 		if board.inBounds( x+1, y+dir )
 			enemy = board.get( x+1, y+dir )
 			if !enemy.isBlank and enemy.isWhite != @isWhite
-				moves.push( [x+1, y+dir] )
+				moves.push( [x+1, y+dir, "capture"] )
 
 		return moves

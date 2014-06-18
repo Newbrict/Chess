@@ -21,28 +21,28 @@ describe 'Pawn', ->
 		@whitePawn.hasMoved = false
 		@board.set 1, 1, @whitePawn
 		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 2]
-		expect(moves).toContain [1, 3]
+		expect(moves).toContain [1, 2, "move"]
+		expect(moves).toContain [1, 3, "move"]
 		expect(moves.length).toBe 2
 		expect(@whitePawn.hasMoved).toBe false
 
 		@blackPawn.hasMoved = false
 		@board.set 1, 4, @blackPawn
 		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 3]
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [1, 3, "move"]
+		expect(moves).toContain [1, 2, "move"]
 		expect(moves.length).toBe 2
 		expect(@blackPawn.hasMoved).toBe false
 
 	it "can only move forward one space if it has moved", ->
 		@board.set 1, 1, @whitePawn
 		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [1, 2, "move"]
 		expect(moves.length).toBe 1
 
 		@board.set 1, 1, @blackPawn
 		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 0]
+		expect(moves).toContain [1, 0, "move"]
 		expect(moves.length).toBe 1
 
 	it 'can have its movement blocked', ->
@@ -64,11 +64,11 @@ describe 'Pawn', ->
 		@board.set 1, 1, @whitePawn
 
 		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [1, 2, "move"]
 		expect(moves.length).toBe 1
 
 		moves = @board.getMoves 1, 3
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [1, 2, "move"]
 		expect(moves.length).toBe 1
 
 	it "can capture diagonally", ->
@@ -76,19 +76,19 @@ describe 'Pawn', ->
 		@board.set 1, 3, @blackPawn
 		@board.set 2, 2, @whitePawn
 		moves = @board.getMoves 2, 2
-		expect(moves).toContain([1,3])
+		expect(moves).toContain [1, 3, "capture"]
 
 		# In front and to the right
 		@board.set 3, 3, @blackPawn
 		moves = @board.getMoves 2, 2
-		expect(moves).toContain([3,3])
+		expect(moves).toContain [3, 3, "capture"]
 
 		# In front and to the right
 		@board.reset 1, 3
 		moves = @board.getMoves 3, 3
-		expect(moves).toContain([2,2])
+		expect(moves).toContain [2, 2, "capture"]
 
 		# In front and to the left
 		@board.set 4, 2, @whitePawn
 		moves = @board.getMoves 3, 3
-		expect(moves).toContain([4,2])
+		expect(moves).toContain [4, 2, "capture"]

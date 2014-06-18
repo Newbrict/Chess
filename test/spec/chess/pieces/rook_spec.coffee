@@ -46,7 +46,7 @@ describe 'Rook', ->
 
 		moves = @board.getMoves 4, 4
 		expect(moves.length).toBe 4
-		expect(moves).toContain [3, 4]
-		expect(moves).toContain [5, 4]
-		expect(moves).toContain [4, 3]
-		expect(moves).toContain [4, 5]
+		expect(moves).toContain [3, 4, "capture"]
+		expect(moves).toContain [5, 4, "capture"]
+		expect(moves).toContain [4, 3, "capture"]
+		expect(moves).toContain [4, 5, "capture"]

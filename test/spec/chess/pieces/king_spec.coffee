@@ -17,19 +17,19 @@ describe 'King', ->
 	it "can can move in 8 directions", ->
 		moves = @king.getMoves 4, 4, @board
 		# bottom
-		expect(moves).toContain [4, 3]
+		expect(moves).toContain [4, 3,"move"]
 		# bottom left
-		expect(moves).toContain [3, 3]
+		expect(moves).toContain [3, 3,"move"]
 		# left
-		expect(moves).toContain [3, 4]
+		expect(moves).toContain [3, 4,"move"]
 		# top left
-		expect(moves).toContain [3, 5]
+		expect(moves).toContain [3, 5,"move"]
 		# top
-		expect(moves).toContain [4, 5]
+		expect(moves).toContain [4, 5,"move"]
 		# top right
-		expect(moves).toContain [5, 5]
+		expect(moves).toContain [5, 5,"move"]
 		# right
-		expect(moves).toContain [5, 4]
+		expect(moves).toContain [5, 4,"move"]
 
 		expect(moves.length).toBe 8
 
@@ -40,9 +40,9 @@ describe 'King', ->
 		moves = @board.getMoves 2, 1
 		expect(@board.inCheck(2, 1, @king.isWhite)).toBe true
 		expect(@board.inCheckMate(2, 1, @king.isWhite)).toBe false
-		expect(moves).toContain [2, 0]
-		expect(moves).toContain [3, 1]
-		expect(moves).toContain [1, 2]
+		expect(moves).toContain [2, 0,"move"]
+		expect(moves).toContain [3, 1,"move"]
+		expect(moves).toContain [1, 2,"capture"]
 		expect(moves.length).toBe 3
 
 	it "can be put in check mate", ->
@@ -83,22 +83,22 @@ describe 'King', ->
 		# white king's position
 		moves = @board.getMoves(4,0)
 		expect(moves.length).toBe 4
-		expect(moves).toContain [2,0]
-		expect(moves).toContain [3,0]
-		expect(moves).toContain [5,0]
-		expect(moves).toContain [6,0]
+		expect(moves).toContain [2,0,"castle"]
+		expect(moves).toContain [3,0,"move"]
+		expect(moves).toContain [5,0,"move"]
+		expect(moves).toContain [6,0,"castle"]
 
 		# black king's position
 		moves = @board.getMoves(4,7)
 		expect(moves.length).toBe 4
-		expect(moves).toContain [2,7]
-		expect(moves).toContain [3,7]
-		expect(moves).toContain [5,7]
-		expect(moves).toContain [6,7]
+		expect(moves).toContain [2,7,"castle"]
+		expect(moves).toContain [3,7,"move"]
+		expect(moves).toContain [5,7,"move"]
+		expect(moves).toContain [6,7,"castle"]
 
 		# white king will do long castle, black will do short castle
-		@board.move(4,0,2,0)
-		@board.move(4,7,6,7)
+		@board.move [4, 0], [2, 0, "castle"]
+		@board.move [4, 7], [6, 7, "castle"]
 		expect(@board.get(2,0).name).toBe "King"
 		expect(@board.get(3,0).name).toBe "Rook"
 		expect(@board.get(6,7).name).toBe "King"

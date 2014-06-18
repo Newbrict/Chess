@@ -46,7 +46,7 @@ describe 'Bishop', ->
 
 		moves = @board.getMoves 4, 4
 		expect(moves.length).toBe 4
-		expect(moves).toContain [3, 3]
-		expect(moves).toContain [5, 5]
-		expect(moves).toContain [5, 3]
-		expect(moves).toContain [3, 5]
+		expect(moves).toContain [3, 3, "capture"]
+		expect(moves).toContain [5, 5, "capture"]
+		expect(moves).toContain [5, 3, "capture"]
+		expect(moves).toContain [3, 5, "capture"]

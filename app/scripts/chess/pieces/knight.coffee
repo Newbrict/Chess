@@ -11,11 +11,12 @@ class @Knight extends Piece
 		# loops over entire board, less efficient but easier to read
 		for j in [0..7]
 			for i in [0..7]
-				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
-					# x and y offsets
-					xo = Math.abs (x - i)
-					yo = Math.abs (y - j)
-					if (xo == 1 && yo == 2) || (yo == 1 && xo == 2)
-						moves.push([i,j])
+				xo = Math.abs (x - i)
+				yo = Math.abs (y - j)
+				if (xo == 1 && yo == 2) || (yo == 1 && xo == 2)
+					if board.get(i,j).isBlank
+						moves.push [i, j, "move"]
+					else if board.get(i,j).isWhite != @isWhite
+						moves.push [i, j, "capture"]
 
 		return moves

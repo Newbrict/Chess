@@ -10,7 +10,11 @@ class @Queen extends Piece
 		moves = []
 		for j in [0..7]
 			for i in [0..7]
-				if board.get(i,j).isWhite != @isWhite or board.get(i,j).isBlank
-					if board.clearStraight(x,y,i,j) or board.clearDiagonal(x,y,i,j)
-						moves.push( [i,j] )
+
+				if board.clearStraight(x,y,i,j) or board.clearDiagonal(x,y,i,j)
+					if board.get(i,j).isBlank
+						moves.push [i, j, "move"]
+					else if board.get(i,j).isWhite != @isWhite
+						moves.push [i, j, "capture"]
+
 		return moves
