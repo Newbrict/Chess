@@ -13,11 +13,13 @@ class @Pawn extends Piece
 		if !@isWhite
 			dir = -1
 
+		doubleStep = ( y == 1 && @isWhite ) || ( y == 6 && !@isWhite )
+
 		# Default move.
 		if board.inBounds(0, y+dir) and board.get( x, y+dir ).isBlank
 			moves.push( [x, y+dir, "move"] )
 			# Double step.
-			unless @hasMoved
+			if doubleStep
 				if board.inBounds(0, y+(2*dir)) and board.get( x, y+(2*dir) ).isBlank
 					moves.push( [x, y+(2*dir), "move"] )
 

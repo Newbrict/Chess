@@ -17,32 +17,28 @@ describe 'Pawn', ->
 		expect(@whitePawn.value).toBe 1
 		expect(@blackPawn.value).toBe 1
 
-	it "can only move forward one or two spaces if it hasn't moved yet", ->
-		@whitePawn.hasMoved = false
+	it "can only move forward one or two spaces if it's in original position ", ->
 		@board.set 1, 1, @whitePawn
 		moves = @board.getMoves 1, 1
 		expect(moves).toContain [1, 2, "move"]
 		expect(moves).toContain [1, 3, "move"]
 		expect(moves.length).toBe 2
-		expect(@whitePawn.hasMoved).toBe false
 
-		@blackPawn.hasMoved = false
-		@board.set 1, 4, @blackPawn
-		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 3, "move"]
-		expect(moves).toContain [1, 2, "move"]
+		@board.set 1, 6, @blackPawn
+		moves = @board.getMoves 1, 6
+		expect(moves).toContain [1, 5, "move"]
+		expect(moves).toContain [1, 4, "move"]
 		expect(moves.length).toBe 2
-		expect(@blackPawn.hasMoved).toBe false
 
-	it "can only move forward one space if it has moved", ->
-		@board.set 1, 1, @whitePawn
-		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 2, "move"]
+	it "can only move forward one space if not on original position", ->
+		@board.set 1, 2, @whitePawn
+		moves = @board.getMoves 1, 2
+		expect(moves).toContain [1, 3, "move"]
 		expect(moves.length).toBe 1
 
-		@board.set 1, 1, @blackPawn
-		moves = @board.getMoves 1, 1
-		expect(moves).toContain [1, 0, "move"]
+		@board.set 1, 5, @blackPawn
+		moves = @board.getMoves 1, 5
+		expect(moves).toContain [1, 4, "move"]
 		expect(moves.length).toBe 1
 
 	it 'can have its movement blocked', ->
