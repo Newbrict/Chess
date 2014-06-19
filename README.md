@@ -1,23 +1,23 @@
 Chess
 =====
-
-Chess game in javascript, enjoy.
+![Travis CI](https://travis-ci.org/Newbrict/Chess.svg?branch=master)
 
 Contributing
 ---
 
-lint your code.
+Keep your code pretty :)
 
 ```
 git clone git@github.com:Newbrict/Chess.git
 cd Chess
 npm install
+gem update --system
+gem install compass
 
 # If you don't have grunt
 npm install -g grunt-cli
 
 grunt serve
+
 grunt test
 ```
-
-One day I hope to complete this readme
