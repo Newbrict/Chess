@@ -3,13 +3,14 @@
 # 0,0 on board is from white's perspective.
 class @Board
 	# fill in with peices
-	#TODO eventually give this an x and y size as constructor arg
+	#TODO (maybe?) give this an x and y size as constructor arg
 	constructor: ->
 		@board =
 		for y in [0..7]
 			for x in [0..7]
 				# if x+y % 2 == 0 then it's a white square
 				new BlankPiece (x + y) % 2 == 0
+		@history = []
 
 	# these work with either algebraic notation or x,y coordinates
 	set: (x, y, to) ->
@@ -34,20 +35,17 @@ class @Board
 		x2   = to[0]
 		y2   = to[1]
 		type = to[2]
+		fromPiece = @get(x1,y1)
+		toPiece   = @get(x2,y2)
 
 		moves = @getMoves(x1, y1)
 		if not containsPair(moves, x2, y2)
 			return false
 
-		p = @get(x1, y1)
-
-		# move the piece
-		@set(x2, y2, p)
-
 		# determine special moves
 		switch type
 			when "castle"
-				cRook = new Rook p.isWhite
+				cRook = new Rook fromPiece.isWhite
 				cRook.hasMoved = true
 				if x2 == 2
 					@reset 0, y2
@@ -56,25 +54,31 @@ class @Board
 					@reset 7, y2
 					@set 5, y2, cRook
 
+		# move the piece
+		@set(x2, y2, fromPiece)
+
 		# clear the piece's old position
 		@reset x1, y1
 
 		# check if the king is in check
+		# first find the king
 		kx = -1
 		ky = -1
 		for j in [0..7]
 			for i in [0..7]
-				if @get(i,j) instanceof King
+				np = @get(i,j)
+				if np.isWhite == fromPiece.isWhite and np instanceof King
 					kx = i
 					ky = j
 
 
-		if kx >= 0 and @inCheck(kx, ky, p.isWhite)
-			@set(x1, y1, p)
-			@set(x1, y1, new BlankPiece)
+		# now see if he's in check, if so revert the piece movement
+		if kx >= 0 and @inCheck kx, ky, fromPiece.isWhite
+			@set x1, y1, fromPiece
+			@set x2, y2, toPiece
 			return false
 		else
-			p.hasMoved = true
+			fromPiece.hasMoved = true
 
 		return true
 

@@ -30,12 +30,17 @@ describe 'Board', ->
 		expect(piece.hasMoved).toBe true
 
 	it "can prevent moves that lead to checks", ->
-		bishop = new Bishop false
 		@board.set 4, 4, "k"
-		@board.set 4, 5, bishop
+		@board.set 4, 5, "b"
+		@board.set 5, 6, "P"
 		@board.set 4, 6, "Q"
-		@board.move [4, 5], [5, 6, "move"]
+		@board.move [4, 5], [5, 6, "capture"]
+		bishop = @board.get(4,5)
+		pawn   = @board.get(5,6)
 		expect(bishop.hasMoved).toBe false
+		expect(bishop instanceof Bishop).toBe true
+		expect(pawn instanceof Pawn).toBe true
+		expect(@board.inCheck(4,4,false)).toBe false
 
 	it "will allow other pieces to prevent checks", ->
 		@board.set 4, 4, "k"
