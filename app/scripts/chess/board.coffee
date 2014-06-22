@@ -27,6 +27,14 @@ class @Board
 	get: (x, y) ->
 		return @board[x][y]
 
+	find: (piece) ->
+		for j in [0..7]
+			for i in [0..7]
+				found = @get i, j
+				if found.isWhite == piece.isWhite && found.constructor.name == piece.constructor.name
+					return [i, j]
+		return [-1, -1]
+
 	# move 1 to 2
 	move: (from, to) ->
 
@@ -61,19 +69,13 @@ class @Board
 		@reset x1, y1
 
 		# check if the king is in check
-		# first find the king
-		kx = -1
-		ky = -1
-		for j in [0..7]
-			for i in [0..7]
-				np = @get(i,j)
-				if np.isWhite == fromPiece.isWhite and np instanceof King
-					kx = i
-					ky = j
-
+		# first find the king coordinates
+		kC = @find new King fromPiece.isWhite
+		kx = kC[0]
+		ky = kC[1]
 
 		# now see if he's in check, if so revert the piece movement
-		if kx >= 0 and @inCheck kx, ky, fromPiece.isWhite
+		if kx >=0 and @inCheck kx, ky, fromPiece.isWhite
 			@set x1, y1, fromPiece
 			@set x2, y2, toPiece
 			return false
