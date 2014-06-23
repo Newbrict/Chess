@@ -45,6 +45,7 @@ class @Board
 		type = to[2]
 		fromPiece = @get(x1,y1)
 		toPiece   = @get(x2,y2)
+		oldBoard = clone @board
 
 		moves = @getMoves(x1, y1)
 		if not containsPair(moves, x2, y2)
@@ -76,8 +77,7 @@ class @Board
 
 		# now see if he's in check, if so revert the piece movement
 		if kx >=0 and @inCheck kx, ky, fromPiece.isWhite
-			@set x1, y1, fromPiece
-			@set x2, y2, toPiece
+			@board = oldBoard
 			return false
 		else
 			fromPiece.hasMoved = true
