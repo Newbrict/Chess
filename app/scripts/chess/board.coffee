@@ -51,17 +51,21 @@ class @Board
 		if not containsPair(moves, x2, y2)
 			return false
 
-		# determine special moves
+		# determine special moves AND write to history
 		switch type
+			when "move","capture"
+				@history.push [x1,y1,x2,y2,type]
 			when "castle"
 				cRook = new Rook fromPiece.isWhite
 				cRook.hasMoved = true
 				if x2 == 2
 					@reset 0, y2
 					@set 3, y2, cRook
+					@history.push [x1,y1,x2,y2,"long-castle"]
 				if x2 == 6
 					@reset 7, y2
 					@set 5, y2, cRook
+					@history.push [x1,y1,x2,y2,"short-castle"]
 
 		# move the piece
 		@set(x2, y2, fromPiece)
@@ -78,6 +82,7 @@ class @Board
 		# now see if he's in check, if so revert the piece movement
 		if kx >=0 and @inCheck kx, ky, fromPiece.isWhite
 			@board = oldBoard
+			@history.pop()
 			return false
 		else
 			fromPiece.hasMoved = true

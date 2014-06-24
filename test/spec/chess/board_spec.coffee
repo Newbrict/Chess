@@ -22,6 +22,17 @@ describe 'Board', ->
 		expect(@board.get(4,4).isWhite).toBe false
 		expect(@board.get(5,5).isWhite).toBe true
 
+	it "maintains a board history", ->
+		expect(@board.history.length).toBe 0
+		@board.set 0, 1, "P"
+		@board.set 1, 4, "p"
+		@board.move [0, 1], [0, 3, "move"]
+		expect(@board.history.length).toBe 1
+		@board.move [1, 4], [0, 3, "capture"]
+		expect(@board.history.length).toBe 2
+		expect(@board.history).toContain [0, 1, 0, 3, "move" ]
+		expect(@board.history).toContain [1, 4, 0, 3, "capture" ]
+
 	it "can move pieces", ->
 		piece = new Pawn false
 		@board.set 4, 4, piece
@@ -35,6 +46,7 @@ describe 'Board', ->
 		@board.set 5, 6, "P"
 		@board.set 4, 6, "Q"
 		@board.move [4, 5], [5, 6, "capture"]
+		expect(@board.history.length).toBe 0
 		bishop = @board.get(4,5)
 		pawn   = @board.get(5,6)
 		expect(bishop.hasMoved).toBe false
