@@ -21,20 +21,37 @@ class @Pawn extends Piece
 			# Double step.
 			if doubleStep
 				if board.inBounds(0, y+(2*dir)) and board.get( x, y+(2*dir) ).isBlank
-					moves.push( [x, y+(2*dir), "move"] )
+					moves.push( [x, y+(2*dir), "double move"] )
 
 
-		# Check if the pawn can capture a piece.
-		# to the left
+		# Check if the pawn can capture a piece to the left
 		if board.inBounds( x-1, y+dir )
 			enemy = board.get( x-1, y+dir )
 			if !enemy.isBlank and enemy.isWhite != @isWhite
 				moves.push( [x-1, y+dir, "capture"] )
 
-		# to the right
+		# Check if the pawn can capture a piece to the right
 		if board.inBounds( x+1, y+dir )
 			enemy = board.get( x+1, y+dir )
 			if !enemy.isBlank and enemy.isWhite != @isWhite
 				moves.push( [x+1, y+dir, "capture"] )
+
+		if board.history.length > 0
+			lastMove = board.history[board.history.length-1]
+			lastMoveType = lastMove[4]
+			# check for en passant
+			if lastMoveType == "double move"
+
+				# to the left
+				if board.inBounds( x-1, y )
+					enemy = board.get( x-1, y )
+					if enemy instanceof Pawn and enemy.isWhite != @isWhite
+						moves.push( [x-1, y+dir, "en passant"] )
+
+				# to the right
+				if board.inBounds( x+1, y )
+					enemy = board.get( x+1, y )
+					if enemy instanceof Pawn and enemy.isWhite != @isWhite
+						moves.push( [x+1, y+dir, "en passant"] )
 
 		return moves

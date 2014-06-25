@@ -21,13 +21,13 @@ describe 'Pawn', ->
 		@board.set 1, 1, @whitePawn
 		moves = @board.getMoves 1, 1
 		expect(moves).toContain [1, 2, "move"]
-		expect(moves).toContain [1, 3, "move"]
+		expect(moves).toContain [1, 3, "double move"]
 		expect(moves.length).toBe 2
 
 		@board.set 1, 6, @blackPawn
 		moves = @board.getMoves 1, 6
 		expect(moves).toContain [1, 5, "move"]
-		expect(moves).toContain [1, 4, "move"]
+		expect(moves).toContain [1, 4, "double move"]
 		expect(moves.length).toBe 2
 
 	it "can only move forward one space if not on original position", ->
@@ -88,3 +88,22 @@ describe 'Pawn', ->
 		@board.set 4, 2, @whitePawn
 		moves = @board.getMoves 3, 3
 		expect(moves).toContain [4, 2, "capture"]
+
+	it "can perform en passant", ->
+		# In front and to the left
+		@board.set 1, 3, "p"
+		@board.set 1, 1, "P"
+		@board.set 2, 1, "P"
+		moves = @board.getMoves 1, 3
+		expect(moves.length).toBe 1
+		expect(moves).toContain [1, 2, "move"]
+		@board.move [2, 1], [2, 3, "double move"]
+		moves = @board.getMoves 1, 3
+		expect(moves.length).toBe 2
+		expect(moves).toContain [1, 2, "move"]
+		expect(moves).toContain [2, 2, "en passant"]
+		@board.move [1, 3], [2, 2, "en passant"]
+		expect(@board.get(2,2) instanceof Pawn).toBe true
+		expect(@board.get(2,2).isWhite).toBe false
+		expect(@board.get(2,3) instanceof BlankPiece).toBe true
+		expect(@board.get(1,1) instanceof Pawn).toBe true
